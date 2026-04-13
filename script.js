@@ -39,6 +39,12 @@ function displayProducts(products) {
       <div class="product-info">
         <h3>${product.name}</h3>
         <p>${product.brand}</p>
+        <button class="description-toggle" aria-expanded="false" aria-label="Show product description">
+          <i class="fa-solid fa-info-circle"></i> Details
+        </button>
+        <div class="product-description" hidden>
+          <p>${product.description}</p>
+        </div>
       </div>
     </div>
   `,
@@ -47,9 +53,33 @@ function displayProducts(products) {
 
   const productCards = document.querySelectorAll(".product-card");
   productCards.forEach((card) => {
-    card.addEventListener("click", () => {
-      const productId = card.dataset.productId;
-      toggleProductSelection(productId);
+    card.addEventListener("click", (e) => {
+      // Only toggle selection if not clicking on the description toggle
+      if (!e.target.closest('.description-toggle')) {
+        const productId = card.dataset.productId;
+        toggleProductSelection(productId);
+      }
+    });
+  });
+
+  // Add event listeners for description toggles
+  const descriptionToggles = document.querySelectorAll(".description-toggle");
+  descriptionToggles.forEach((toggle) => {
+    toggle.addEventListener("click", (e) => {
+      e.stopPropagation(); // Prevent card selection when clicking toggle
+      const card = toggle.closest('.product-card');
+      const description = card.querySelector('.product-description');
+      const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+
+      if (isExpanded) {
+        description.hidden = true;
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.innerHTML = '<i class="fa-solid fa-info-circle"></i> Details';
+      } else {
+        description.hidden = false;
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.innerHTML = '<i class="fa-solid fa-chevron-up"></i> Hide Details';
+      }
     });
   });
 }
