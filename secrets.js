@@ -1,1 +1,1 @@
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = "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";
